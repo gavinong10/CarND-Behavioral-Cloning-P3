@@ -21,6 +21,7 @@ app = Flask(__name__)
 model = None
 prev_image_array = None
 
+#./drive.py "model.h5"
 
 @sio.on('telemetry')
 def telemetry(sid, data):
@@ -35,6 +36,14 @@ def telemetry(sid, data):
         imgString = data["image"]
         image = Image.open(BytesIO(base64.b64decode(imgString)))
         image_array = np.asarray(image)
+        
+        # # Gavin's additions: crop and rescale so we can use VGG
+        # corners = (80, 0), (240, 160)
+        # for idx, image in enumerate(image_array)
+        #     cropped_image = image[corners[0][1]:corners[1][1], corners[0][0]:corners[1][0], :]
+        #     cropped_and_upscaled_image = cv2.resize(cropped_image, (224, 224))
+        #     image_array[idx] = cropped_and_upscaled_image
+        
         steering_angle = float(model.predict(image_array[None, :, :, :], batch_size=1))
         min_speed = 8
         max_speed = 10
