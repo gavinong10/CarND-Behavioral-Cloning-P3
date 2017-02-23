@@ -12,7 +12,7 @@ from sklearn import preprocessing
 import shutil
 import skimage.transform as sktransform
 
-is_AWS = False
+is_AWS = False if 'Macbook' in socket.gethostname() else True
 
 if is_AWS:
     track1_dir = '/home/carnd/Dropbox/udacity-data/track1'
@@ -32,7 +32,7 @@ track1_data_dirs = [x for x in os.listdir(track1_dir) if x not in folders_to_exc
 print(track1_data_dirs)
 
 #############
-#track1_data_dirs = ['data_download']
+track1_data_dirs = ['data_download']
 #############
 
 track1_data_dirs = [track1_dir + '/' + x for x in track1_data_dirs]
@@ -53,4 +53,4 @@ for data_dir in track1_data_dirs:
     else:
         driving_log_df = pd.concat([driving_log_df, df])
 
-driving_log_df.to_csv('output.csv', index=False)
+driving_log_df.to_csv('driving_log.csv', index=False)
