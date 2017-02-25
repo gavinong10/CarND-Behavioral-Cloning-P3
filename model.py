@@ -55,7 +55,7 @@ class weight_logger(Callback):
     def on_epoch_end(self, epoch, logs={}):
         #At end of epoch, save the model
         if epoch % 5 == 0:
-            self.model.save_weights(os.path.join(self.output_path, 'model_epoch_{}.h5'.format(epoch + 1)))
+            self.model.save(os.path.join(self.output_path, 'model_epoch_{}.h5'.format(epoch + 1)))
         
         # Want to save training loss and validation loss
         loss = logs.get('loss')
@@ -88,7 +88,7 @@ class weight_logger(Callback):
         
         size_filter = df['steering'].abs().diff() < 0.1
         df['groups'] = (~size_filter).cumsum()
-        MSE_segments = df[size_filter][['steering', 'groups']].groupby('groups')['steering'] \
+        MSE_segments = df[size_filter][['prediction_loss', 'groups']].groupby('groups')['prediction_loss'] \
                 .aggregate(lambda x: (x * x).sum() / len(x)).mean()
         
         output_dict = {

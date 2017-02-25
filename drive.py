@@ -39,7 +39,7 @@ def telemetry(sid, data):
         image = Image.open(BytesIO(base64.b64decode(imgString)))
         image_array = np.asarray(image)
         
-        preprocess.preprocess_image(img)
+        image_array = preprocess.preprocess_image(image_array)
         
         # # Gavin's additions: crop and rescale so we can use VGG
         # corners = (80, 0), (240, 160)

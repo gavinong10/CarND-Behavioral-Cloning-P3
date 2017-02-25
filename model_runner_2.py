@@ -25,31 +25,34 @@ template = {
     "MIN_ANGLE_VAL": 0.0   
 }
 
-all_instances = [template, 
-     template.copy().update({
-    "output_path": 'training/Nadam_0.3_dropout',
-    "dropout": 0.3
-}),
-    template.copy().update({
-    "output_path": 'training/Nadam_0.6_dropout',
-    "dropout": 0.6
-}),
-    template.copy().update({
+all_instances = [
+#     {**template, **{
+#     "output_path": 'training/Nadam_std',
+# }}, 
+#      {**template, **{
+#     "output_path": 'training/Nadam_0.3_dropout',
+#     "dropout": 0.3
+# }},
+#     {**template, **{
+#     "output_path": 'training/Nadam_0.6_dropout',
+#     "dropout": 0.6
+# }},
+    {**template, **{
     "output_path": 'training/Nadam_0.9_dropout',
     "dropout": 0.9
-}),
-    template.copy().update({
+}},
+    {**template, **{
     "output_path": 'training/Nadam_offset=0.1',
     "OFFSET": 0.1
-}),
-    template.copy().update({
+}},
+    {**template, **{
     "output_path": 'training/Nadam_offset=0.15',
     "OFFSET": 0.15
-}),
-    template.copy().update({
+}},
+    {**template, **{
     "output_path": 'training/Nadam_offset=0.5',
     "OFFSET": 0.25
-})]
+}}]
 
 if __name__ == "__main__":
     
