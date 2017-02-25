@@ -57,12 +57,13 @@ def telemetry(sid, data):
         #     throttle = -1.0
         # else:
         #     throttle = 0.1
-            
-        if abs(steering_angle) > 0.1 and speed > 10: 
-               throttle = 0.01 
-        else: 
-               throttle = 0.15
-
+        try:
+            if abs(steering_angle) > 0.1 and float(speed) > 10: 
+                   throttle = 0.01 
+            else: 
+                   throttle = 0.15
+        except:
+            print("Error with speed value: ", speed)
         print(steering_angle, throttle)
         send_control(steering_angle, throttle)
 
