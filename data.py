@@ -6,6 +6,7 @@ import socket
 from sklearn import preprocessing
 import skimage.transform as sktransform
 import preprocess
+import cv2
 
 #############
 #track1_data_dirs = ['data_download']
@@ -59,12 +60,15 @@ def organize_data(df):
     df['position'] = 'center'
     
     df = pd.concat([df, df_left, df_right])
-    df['path'] = df[df['position']]
-    del(df[['left', 'center', 'right']])
+    df['path'] = df.apply(lambda x: x[x['position']], axis=1)
+    
+    columns_to_drop = ['left', 'center', 'right']
+    for col in columns_to_drop:
+        del df[col]
     df = df.sample(frac=1).reset_index(drop=True)
     return df
     
-def subset_by_mode(df, mode):
+def subset_by_mode(df, val_portion, mode):
     total_len = len(df)
     val_len = int(val_portion * total_len)
     train_len = total_len - val_len
@@ -90,8 +94,8 @@ def set_position_targets(df, position):
     return df
                 
 def offset_steering(df, offset):
-    df[df['target'] == 'left']['steering'] = df[df['target'] == 'left']['steering'] + offset
-    df[df['target'] == 'right']['steering'] = df[df['target'] == 'right']['steering'] - offset
+    df[df['position'] == 'left']['steering'] += offset
+    df[df['position'] == 'right']['steering'] -= offset
     return df
 
 def filter_by_steering(df, min_angle):
@@ -114,7 +118,7 @@ def append_shadowed_data(df):
 def retrieve_generator(df, image_size, batch_size = 10, mode = 'train', position = 'center',
                      offset = 0.2, val_portion = 0.2, include_mirror=True, 
                      include_shadow = True, min_angle=0.02):
-    df = subset_by_mode(df, mode)
+    df = subset_by_mode(df, val_portion, mode)
     if mode == 'val':
         position = 'center'
     
@@ -130,9 +134,10 @@ def retrieve_generator(df, image_size, batch_size = 10, mode = 'train', position
     if include_shadow:
         df = append_shadowed_data(df)
 
+    image_size = preprocess.preprocess_image(np.zeros(image_size)).shape
     inputs = np.zeros([batch_size, *image_size]) #length of prediction output
     targets = np.zeros([batch_size])
-    
+        
     def generator(df, inputs, targets):
         count = 0
         while(True):
@@ -140,7 +145,7 @@ def retrieve_generator(df, image_size, batch_size = 10, mode = 'train', position
             df = df.sample(frac=1).reset_index(drop=True)
             for idx in range(len(df)):
                 row = df.iloc[idx]
-                image_path = row[row['target']]
+                image_path = row['path']
                 img = cv2.imread(image_path)
                 if row['mirror']:
                     img = img[:,::-1,:]
@@ -148,7 +153,7 @@ def retrieve_generator(df, image_size, batch_size = 10, mode = 'train', position
                 if row['shadow']:
                     img = add_random_shadow(img)
                 
-                img = preprocess_image(img)
+                img = preprocess.preprocess_image(img)
                     
                 img = img[np.newaxis, :, :, :]
 
