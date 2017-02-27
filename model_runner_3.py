@@ -15,8 +15,8 @@ template = {
     "TRAIN_BATCH_SIZE": 64,
     "VAL_BATCH_SIZE": 64,
 
-    "EPOCHS": 80 * (10000/64),
-    "OFFSET": 0.2,
+    "EPOCHS": 140,
+    "OFFSET": 0.15,
     "VAL_PORTION": VAL_PORTION,
     "INCLUDE_MIRROR_TRAIN": True,
     "INCLUDE_MIRROR_VAL": False,
@@ -28,27 +28,11 @@ template = {
 
 all_instances = [
     {**template, **{
+    "optimizer": 'Nadam',
+    "output_path": 'training4/Nadam_std',
+}},
+    {**template, **{
     "output_path": 'training4/Adam_std',
-# }}, 
-#      {**template, **{
-#     "output_path": 'training3/Adam_0.3_dropout',
-#     "dropout": 0.3
-# }},
-#     {**template, **{
-#     "output_path": 'training3/Adam_0.7_dropout',
-#     "dropout": 0.7
-# }},
-#     {**template, **{
-#     "output_path": 'training3/Adam_offset=0.1',
-#     "OFFSET": 0.1
-# }},
-#     {**template, **{
-#     "output_path": 'training3/Adam_offset=0.15',
-#     "OFFSET": 0.15
-# }},
-#     {**template, **{
-#     "output_path": 'training3/Adam_offset=0.25',
-#     "OFFSET": 0.25
 }}]
 
 if __name__ == "__main__":
