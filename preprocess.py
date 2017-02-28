@@ -17,6 +17,6 @@ def normalize_image(img):
 def preprocess_image(img):
     # Original image is (160, 320, 3)
     img_crop = img[60:150, :, :] # Clip mainly the top of the image (94, 320, 3)
-    img_resize = cv2.resize(img_crop, (40, 16))#(200, 66)) 
+    img_resize = cv2.resize(img_crop, (64, 18)) # (64, 18)) # (40, 16))#(200, 66)) 
     img_normed = normalize_image(img_resize)
     return img_normed

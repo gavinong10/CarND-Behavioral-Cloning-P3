@@ -13,8 +13,8 @@ def nvidia_model(learning_rate=0.0001, dropout=0.5, optimizer = 'Adam'):
     model = Sequential()
 
     # model.add(Convolution2D(24, 5, 5, subsample=(2, 2), input_shape=(66, 200, 3),
-    #                         activation='relu'))
-    model.add(Convolution2D(24, 5, 5, subsample=(1, 1), border_mode='same', input_shape=(16, 40, 3),
+                            # activation='relu'))
+    model.add(Convolution2D(24, 5, 5, subsample=(1, 1), border_mode='same', input_shape=(18, 64, 3),
                             activation='relu'))
     model.add(Convolution2D(36, 5, 5, subsample=(1, 1), border_mode='same', activation='relu'))
     model.add(Convolution2D(48, 5, 5, subsample=(1, 1), activation='relu'))
@@ -24,12 +24,13 @@ def nvidia_model(learning_rate=0.0001, dropout=0.5, optimizer = 'Adam'):
 
     model.add(Flatten())
     model.add(Dropout(dropout))
-    model.add(Dense(1164, activation='relu'))
+    model.add(Dense(800, activation='relu'))
     model.add(Dropout(dropout))
     model.add(Dense(100, activation='relu'))
     model.add(Dropout(dropout))
     model.add(Dense(50, activation='relu'))
-    model.add(Dense(10, activation='relu'))
+    #model.add(Dropout(dropout))
+    #model.add(Dense(10, activation='relu'))
     model.add(Dense(1, activation='tanh'))
     
     if optimizer == 'Adam':
@@ -147,11 +148,11 @@ def train(model, **kwargs):
     position = 'all'
     train_generator_all, train_len = retrieve_generator(df, IMAGE_SIZE, ns.TRAIN_BATCH_SIZE, 'train', position, 
                                                       ns.OFFSET, ns.VAL_PORTION, ns.INCLUDE_MIRROR_TRAIN, 
-                                                      ns.INCLUDE_SHADOW_TRAIN, ns.MIN_ANGLE_TRAIN)
+                                                      ns.INCLUDE_SHADOW_TRAIN, ns.MIN_ANGLE_TRAIN, ns.EPOCH_SIZE)
 
     validation_generator_all, val_len = retrieve_generator(df, IMAGE_SIZE, ns.VAL_BATCH_SIZE, 'val', position, 
                                                       ns.OFFSET, ns.VAL_PORTION, ns.INCLUDE_MIRROR_VAL, 
-                                                      ns.INCLUDE_SHADOW_VAL, ns.MIN_ANGLE_VAL)
+                                                      ns.INCLUDE_SHADOW_VAL, ns.MIN_ANGLE_VAL, ns.EPOCH_SIZE)
     
 
 

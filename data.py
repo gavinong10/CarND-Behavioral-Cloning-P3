@@ -117,7 +117,7 @@ def append_shadowed_data(df):
 
 def retrieve_generator(df, image_size, batch_size = 10, mode = 'train', position = 'center',
                      offset = 0.2, val_portion = 0.2, include_mirror=True, 
-                     include_shadow = True, min_angle=0.02):
+                     include_shadow = True, min_angle=0.02, epoch_size = None):
     df = subset_by_mode(df, val_portion, mode)
     if mode == 'val':
         position = 'center'
@@ -143,6 +143,10 @@ def retrieve_generator(df, image_size, batch_size = 10, mode = 'train', position
         while(True):
             #Shuffle
             df = df.sample(frac=1).reset_index(drop=True)
+            if epoch_size is not None:
+                # Limit the epoch size
+                df = df.iloc[:epoch_size] # Bad hack
+                
             for idx in range(len(df)):
                 row = df.iloc[idx]
                 image_path = row['path']
@@ -167,6 +171,10 @@ def retrieve_generator(df, image_size, batch_size = 10, mode = 'train', position
                     targets = np.zeros([batch_size])
                     count = 0
                     
-    return generator(df, inputs, targets), len(df)
+    if epoch_size is not None:
+        df_len = len(df.iloc[:epoch_size]) # Bad hack
+    else:
+        df_len = len(df)
+    return generator(df, inputs, targets), df_len
 
 

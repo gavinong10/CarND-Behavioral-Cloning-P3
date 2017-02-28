@@ -18,7 +18,7 @@ template = {
     "VAL_BATCH_SIZE": 32,
 
     "EPOCHS": 140,
-    "OFFSET": 0.2,
+    "OFFSET": 0.15,
     "VAL_PORTION": VAL_PORTION,
     "INCLUDE_MIRROR_TRAIN": True,
     "INCLUDE_MIRROR_VAL": False,
@@ -26,28 +26,38 @@ template = {
     "INCLUDE_SHADOW_VAL": False,
     "MIN_ANGLE_TRAIN": 0.0,
     "MIN_ANGLE_VAL": 0.0 ,
-    "LOAD_MODEL": False,
-    "EPOCH_SIZE": None,
+    "LOAD_MODEL": False
 }
 
 all_instances = [
-    {**template, **{
+# {**template, **{
+#     "optimizer": 'Nadam',
+#     "lr": 0.005,
+#     "output_path": 'training4_high_lr/Nadam_std_+_firsthardrightfwddirt_lr0.005',
+#     "track1_data_dirs": ['data_download', 'avoid_dirt', 'first_hard_right_fwd'],
+#     "LOAD_MODEL": 'training4_high_lr/Nadam_std/model_epoch_17.h5',
+#     "EPOCHS": 15,
+# }},
+# {**template, **{
+#     "optimizer": 'Nadam',
+#     "lr": 0.001,
+#     "output_path": 'training4_high_lr/Nadam_std_+_firsthardrightfwddirt_lr0.001',
+#     "track1_data_dirs": ['data_download', 'avoid_dirt', 'first_hard_right_fwd'],
+#     "LOAD_MODEL": 'training4_high_lr/Nadam_std_+_firsthardrightfwddirt_lr0.005/model_epoch_15.h5',
+#     "EPOCHS": 30,
+# }},
+{**template, **{
     "optimizer": 'Adam',
-    "lr": 0.0001,
-    "output_path": 'training6_smallpreprocess/Adam_std_dirt_right_limepoch/Adam_std_dirt_right_limepoch/Adam_std_dirt_right_limepoch',
-    "track1_data_dirs": ['data_download', 'avoid_dirt', 'first_hard_right', 'first_hard_right_correction'],
-    "EPOCHS": 15,
-    "EPOCH_SIZE": 50000,
-    "LOAD_MODEL": "training6_smallpreprocess/Adam_std_dirt_right_limepoch/Adam_std_dirt_right_limepoch/model_epoch_3.h5",
+    "lr": 0.00005,
+    "output_path": 'training7_newsmallfirsthardrightfwddirt',
+    "track1_data_dirs": ['data_download', 'avoid_dirt', 'first_hard_right_fwd'],
+    "EPOCHS": 30,
 }},
 {**template, **{
     "optimizer": 'Adam',
-    "lr": 0.00003,
-    "output_path": 'training6_smallpreprocess/Adam_std_dirt_right_limepoch/Adam_std_dirt_right_limepoch/Adam_std_dirt_right_limepoch_0.00003',
-    "track1_data_dirs": ['data_download', 'avoid_dirt', 'first_hard_right', 'first_hard_right_correction'],
-    "EPOCHS": 15,
-    "EPOCH_SIZE": 50000,
-    "LOAD_MODEL": "training6_smallpreprocess/Adam_std_dirt_right_limepoch/Adam_std_dirt_right_limepoch/model_epoch_5.h5",
+    "lr": 0.00005,
+    "output_path": 'training7_alldata',
+    "EPOCHS": 30,
 }}]
 
 if __name__ == "__main__":
@@ -65,5 +75,5 @@ if __name__ == "__main__":
             model.compile(optimizer=opt, loss='mean_squared_error')
         else:
             model = nvidia_model(learning_rate=inst['lr'], dropout=inst['dropout'], optimizer = inst['optimizer'])
-        print(model.summary())
+        model.save('test.hd5')
         train(model, **inst)
