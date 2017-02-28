@@ -1,5 +1,6 @@
 from keras.layers.core import Dense, Flatten, Dropout
 from keras.layers.convolutional import Convolution2D
+from keras.layers.pooling import MaxPooling2D
 from keras.models import Sequential
 from keras.optimizers import Adam, Nadam
 from keras.callbacks import Callback
@@ -9,26 +10,30 @@ import pandas as pd
 from pandas import DataFrame, Series
 import shutil
 
+
 def nvidia_model(learning_rate=0.0001, dropout=0.5, optimizer = 'Adam'):
     model = Sequential()
+    
+    # Add a color map layer as suggested by Vivek Yadav to let the model figure out
+    # the best color map for this hypothesis
+    model.add(Convolution2D(3, 1, 1, border_mode='same', name='color_conv'), input_shape=(18, 64, 3))
 
-    # model.add(Convolution2D(24, 5, 5, subsample=(2, 2), input_shape=(66, 200, 3),
-                            # activation='relu'))
-    model.add(Convolution2D(24, 5, 5, subsample=(1, 1), border_mode='same', input_shape=(18, 64, 3),
-                            activation='relu'))
-    model.add(Convolution2D(36, 5, 5, subsample=(1, 1), border_mode='same', activation='relu'))
-    model.add(Convolution2D(48, 5, 5, subsample=(1, 1), activation='relu'))
+    model.add(Convolution2D(24, 5, 5, subsample=(1, 1), border_mode='same',
+                            activation='elu'))
+    model.add(Convolution2D(36, 5, 5, subsample=(1, 1), border_mode='same', activation='elu'))
+    model.add(Convolution2D(48, 5, 5, subsample=(1, 1), activation='elu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
 
-    model.add(Convolution2D(64, 3, 3, activation='relu'))
-    model.add(Convolution2D(64, 3, 3, activation='relu'))
+    model.add(Convolution2D(64, 3, 3, activation='elu'))
+    model.add(Convolution2D(64, 3, 3, activation='elu'))
 
     model.add(Flatten())
     model.add(Dropout(dropout))
-    model.add(Dense(800, activation='relu'))
+    model.add(Dense(800, activation='elu'))
     model.add(Dropout(dropout))
-    model.add(Dense(100, activation='relu'))
+    model.add(Dense(100, activation='elu'))
     model.add(Dropout(dropout))
-    model.add(Dense(50, activation='relu'))
+    model.add(Dense(50, activation='elu'))
     #model.add(Dropout(dropout))
     #model.add(Dense(10, activation='relu'))
     model.add(Dense(1, activation='tanh'))

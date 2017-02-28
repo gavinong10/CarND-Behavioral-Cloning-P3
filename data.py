@@ -114,6 +114,16 @@ def append_shadowed_data(df):
     df = pd.concat([df, dfShadow])
     return df
 
+def change_brightness(img):
+    BRIGHTNESS_RANGE = .25  # The range of brightness changes
+    
+    temp = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+    # Compute a random brightness value and apply to the image
+    brightness = BRIGHTNESS_RANGE + np.random.uniform()
+    temp[:, :, 2] = temp[:, :, 2] * brightness
+    # Convert back to RGB and return
+    return cv2.cvtColor(temp, cv2.COLOR_HSV2RGB)
+
 
 def retrieve_generator(df, image_size, batch_size = 10, mode = 'train', position = 'center',
                      offset = 0.2, val_portion = 0.2, include_mirror=True, 
@@ -148,7 +158,13 @@ def retrieve_generator(df, image_size, batch_size = 10, mode = 'train', position
                 df = df.iloc[:epoch_size] # Bad hack
                 
             for idx in range(len(df)):
+                # Define a random threshold for each image taken
+                threshold = np.random.uniform()
                 row = df.iloc[idx]
+                if (abs(row['steering'])) < threshold:
+                    #Skip
+                    continue
+                
                 image_path = row['path']
                 img = cv2.imread(image_path)
                 if row['mirror']:
@@ -156,6 +172,8 @@ def retrieve_generator(df, image_size, batch_size = 10, mode = 'train', position
                 
                 if row['shadow']:
                     img = add_random_shadow(img)
+                    
+                img = change_brightness(img)
                 
                 img = preprocess.preprocess_image(img)
                     

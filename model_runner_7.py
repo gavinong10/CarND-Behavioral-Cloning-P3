@@ -26,7 +26,8 @@ template = {
     "INCLUDE_SHADOW_VAL": False,
     "MIN_ANGLE_TRAIN": 0.0,
     "MIN_ANGLE_VAL": 0.0 ,
-    "LOAD_MODEL": False
+    "LOAD_MODEL": False,
+    "EPOCH_SIZE": None,
 }
 
 all_instances = [
@@ -49,15 +50,17 @@ all_instances = [
 {**template, **{
     "optimizer": 'Adam',
     "lr": 0.00005,
-    "output_path": 'training7_newsmallfirsthardrightfwddirt',
+    "output_path": 'training7_0unbiased_newsmallfirsthardrightfwddirt',
     "track1_data_dirs": ['data_download', 'avoid_dirt', 'first_hard_right_fwd'],
-    "EPOCHS": 30,
+    "EPOCHS": 15,
+    "EPOCH_SIZE": 100000,
 }},
 {**template, **{
     "optimizer": 'Adam',
     "lr": 0.00005,
-    "output_path": 'training7_alldata',
-    "EPOCHS": 30,
+    "output_path": 'training7_0unbiased_alldata',
+    "EPOCHS": 15,
+    "EPOCH_SIZE": 100000,
 }}]
 
 if __name__ == "__main__":
