@@ -14,9 +14,8 @@ import shutil
 def nvidia_model(learning_rate=0.0001, dropout=0.5, optimizer = 'Adam'):
     model = Sequential()
     
-    # Add a color map layer as suggested by Vivek Yadav to let the model figure out
-    # the best color map for this hypothesis
-    model.add(Convolution2D(3, 1, 1, border_mode='same', name='color_conv'), input_shape=(18, 64, 3))
+    # Add a color map layer to let the model figure out the best color map for this hypothesis
+    model.add(Convolution2D(3, 1, 1, border_mode='same', name='color_conv', input_shape=(18, 64, 3)))
 
     model.add(Convolution2D(24, 5, 5, subsample=(1, 1), border_mode='same',
                             activation='elu'))

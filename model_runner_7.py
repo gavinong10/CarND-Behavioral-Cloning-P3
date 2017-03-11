@@ -50,16 +50,16 @@ all_instances = [
 {**template, **{
     "optimizer": 'Adam',
     "lr": 0.00005,
-    "output_path": 'training7_0unbiased_newsmallfirsthardrightfwddirt',
+    "output_path": 'training8_0unbiased_newsmallfirsthardrightfwddirt',
     "track1_data_dirs": ['data_download', 'avoid_dirt', 'first_hard_right_fwd'],
-    "EPOCHS": 15,
+    "EPOCHS": 5,
     "EPOCH_SIZE": 100000,
 }},
 {**template, **{
     "optimizer": 'Adam',
     "lr": 0.00005,
-    "output_path": 'training7_0unbiased_alldata',
-    "EPOCHS": 15,
+    "output_path": 'training8_0unbiased_alldata',
+    "EPOCHS": 5,
     "EPOCH_SIZE": 100000,
 }}]
 
@@ -78,5 +78,6 @@ if __name__ == "__main__":
             model.compile(optimizer=opt, loss='mean_squared_error')
         else:
             model = nvidia_model(learning_rate=inst['lr'], dropout=inst['dropout'], optimizer = inst['optimizer'])
+        print(model.summary())
+        #train(model, **inst)
         model.save('test.hd5')
-        train(model, **inst)
